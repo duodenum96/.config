@@ -24,10 +24,11 @@ return {
       },
       menu = {
         -- auto_show = false,
-        auto_show_delay_ms = 500,
+        auto_show_delay_ms = 100,
         draw = {
           treesitter = { "lsp" },
         },
+        max_height = 3,
       },
       documentation = {
         auto_show = true,
