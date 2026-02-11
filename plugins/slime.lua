@@ -185,19 +185,31 @@ return {
 
     -- Key mappings
     local opts = { noremap = true, silent = true }
+    vim.keymap.set("n", "r", "<Nop>")
 
-    -- vim.keymap.set("n", "<leader>rp", function()
-    --   if ensure_slime_config() then
-    --     vim.cmd("normal! vip")
-    --     vim.fn["slime#send_range"](vim.fn.line("'<"), vim.fn.line("'>"))
-    --     scroll_terminal_to_bottom()
-    --   end
-    -- end, opts)
+    -- Send Enter/newline to terminal
+    vim.keymap.set("n", "<CR>", function()
+      if terminal_jobid then
+        vim.api.nvim_chan_send(terminal_jobid, "\n")
+        scroll_terminal_to_bottom()
+      end
+    end, { noremap = true, silent = true, desc = "Execute in REPL" })
 
-    vim.keymap.set("n", "<leader>rp", "<Plug>SlimeParagraphSend", opts)
-    -- Wrapper function to add execution and scrolling after slime send
+    -- vim.keymap.set("n", "rp", "<Plug>SlimeParagraphSend))<CR>", opts)
+    vim.keymap.set("n", "rp", function()
+      -- Execute the Slime command
+      vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeParagraphSend))", true, false, true))
 
-    vim.keymap.set("n", "<leader>rr", function()
+      -- Then send newline to terminal
+      vim.schedule(function()
+        if terminal_jobid then
+          vim.api.nvim_chan_send(terminal_jobid, "\n")
+          scroll_terminal_to_bottom()
+        end
+      end)
+    end, { noremap = true, silent = true })
+
+    vim.keymap.set("n", "rr", function()
       if ensure_slime_config() then
         local node = get_top_level_node()
         if node then
@@ -214,33 +226,32 @@ return {
     end, opts)
 
     -- Visual mode - send selection
-    -- vim.keymap.set("v", "<leader>r", function()
-    --   if ensure_slime_config() then
-    --     -- Get visual selection boundaries
-    --     local start_line = vim.fn.line("'<")
-    --     local end_line = vim.fn.line("'>")
-    --
-    --     -- Send the range
-    --     -- vim.fn["slime#send_range"](start_line, end_line)
-    --     -- vim.fn.chansend(terminal_jobid, { "\n\n" })
-    --
-    --     send_and_execute(start_line, end_line) -- HERE
-    --     scroll_terminal_to_bottom()
-    --
-    --     -- Exit visual mode
-    --     local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-    --     vim.api.nvim_feedkeys(esc, "x", false)
-    --   end
-    -- end, opts)
-    --
-    vim.keymap.set("v", "<leader>r", "<Plug>SlimeRegionSend", opts)
+    -- vim.keymap.set("v", "r", "<Plug>SlimeRegionSend", opts)
+    vim.keymap.set("v", "r", function()
+      vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeRegionSend", true, false, true))
+      vim.schedule(function()
+        if terminal_jobid then
+          vim.api.nvim_chan_send(terminal_jobid, "\n")
+          scroll_terminal_to_bottom()
+        end
+      end)
+    end, { noremap = true, silent = true })
 
-    vim.keymap.set("n", "<leader>r", "<Plug>SlimeMotionSend")
+    -- vim.keymap.set("n", "r", "<Plug>SlimeMotionSend")
+    vim.keymap.set("n", "r", function()
+      vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeMotionSend", true, false, true))
+      vim.schedule(function()
+        if terminal_jobid then
+          vim.api.nvim_chan_send(terminal_jobid, "\n")
+          scroll_terminal_to_bottom()
+        end
+      end)
+    end, { noremap = true, silent = true })
 
-    vim.keymap.set("n", "<leader>rs", start_repl_for_filetype, { noremap = true, silent = true, desc = "Start REPL" })
+    vim.keymap.set("n", "rs", start_repl_for_filetype, { noremap = true, silent = true, desc = "Start REPL" })
 
     -- Toggle terminal visibility
-    vim.keymap.set("n", "<leader>rt", function()
+    vim.keymap.set("n", "rt", function()
       if not terminal_bufnr or not vim.api.nvim_buf_is_valid(terminal_bufnr) then
         print("No terminal running. Use <leader>rs to start REPL")
         return
@@ -273,7 +284,7 @@ return {
     end, { noremap = true, silent = true, desc = "Toggle REPL terminal" })
 
     -- Explicit hide terminal
-    vim.keymap.set("n", "<leader>rh", function()
+    vim.keymap.set("n", "rh", function()
       if not terminal_bufnr or not vim.api.nvim_buf_is_valid(terminal_bufnr) then
         return
       end
@@ -307,23 +318,15 @@ return {
     end, { noremap = true, silent = true, desc = "Jump to REPL terminal" })
 
     -- Jump back to last editor window
-    vim.keymap.set("t", "<C-\\><C-\\>", function()
+    vim.keymap.set("t", "<C-p><C-p>", function()
       -- Exit terminal mode and go to previous window
       vim.cmd("wincmd p")
     end, { noremap = true, silent = true, desc = "Jump back to editor" })
 
     -- Alternative: also add this in normal mode for convenience
-    vim.keymap.set("n", "<leader>rk", function()
+    vim.keymap.set("n", "rk", function()
       -- Jump to previous window (useful when in terminal in normal mode)
       vim.cmd("wincmd p")
     end, { noremap = true, silent = true, desc = "Jump to previous window" })
-
-    -- Send Enter/newline to terminal
-    vim.keymap.set("n", "<CR>", function()
-      if terminal_jobid then
-        vim.api.nvim_chan_send(terminal_jobid, "\n")
-        scroll_terminal_to_bottom()
-      end
-    end, { noremap = true, silent = true, desc = "Execute in REPL" })
   end,
 }
