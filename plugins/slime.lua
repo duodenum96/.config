@@ -209,6 +209,19 @@ return {
       end)
     end, { noremap = true, silent = true })
 
+    vim.keymap.set("n", "ro", function()
+      -- Execute the Slime command
+      vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeParagraphSend", true, false, true))
+
+      -- Then send newline to terminal
+      vim.schedule(function()
+        if terminal_jobid then
+          vim.api.nvim_chan_send(terminal_jobid, "\n")
+          scroll_terminal_to_bottom()
+        end
+      end)
+    end, { noremap = true, silent = true })
+
     vim.keymap.set("n", "rr", function()
       if ensure_slime_config() then
         local node = get_top_level_node()
@@ -237,16 +250,16 @@ return {
       end)
     end, { noremap = true, silent = true })
 
-    -- vim.keymap.set("n", "r", "<Plug>SlimeMotionSend")
-    vim.keymap.set("n", "r", function()
-      vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeMotionSend", true, false, true))
-      vim.schedule(function()
-        if terminal_jobid then
-          vim.api.nvim_chan_send(terminal_jobid, "\n")
-          scroll_terminal_to_bottom()
-        end
-      end)
-    end, { noremap = true, silent = true })
+    vim.keymap.set("n", "r", "<Plug>SlimeMotionSend")
+    -- vim.keymap.set("n", "r", function()
+    --   vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>SlimeMotionSend", true, false, true))
+    --   vim.schedule(function()
+    --     if terminal_jobid then
+    --       vim.api.nvim_chan_send(terminal_jobid, "\n")
+    --       scroll_terminal_to_bottom()
+    --     end
+    --   end)
+    -- end, { noremap = true, silent = true })
 
     vim.keymap.set("n", "rs", start_repl_for_filetype, { noremap = true, silent = true, desc = "Start REPL" })
 
