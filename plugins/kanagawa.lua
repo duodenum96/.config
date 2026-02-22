@@ -41,6 +41,6 @@ return {
         }
       end,
     })
+    vim.cmd("colorscheme kanagawa")
   end,
-  -- vim.cmd("colorscheme kanagawa"),
 }
