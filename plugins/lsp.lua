@@ -13,6 +13,23 @@ if not configs.ty then
   }
 end
 
+-- vim.lsp.config("jetls", {
+--   cmd = {
+--     "jetls",
+--     "serve",
+--   },
+--   filetypes = { "julia" },
+--   root_markers = { "Project.toml" },
+--   settings = { jetls = {
+--     formatter = "Runic",
+--   } },
+--   on_attach = function(client, bufnr)
+--     client.server_capabilities.documentFormattingProvider = false
+--     client.server_capabilities.documentRangeFormattingProvider = false
+--   end,
+-- })
+vim.lsp.enable("julials")
+
 return {
   {
     "neovim/nvim-lspconfig",
