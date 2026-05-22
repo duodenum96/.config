@@ -11,12 +11,12 @@ return {
   },
 
   -- Set rose-pine as default colorscheme
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "rose-pine-moon",
-    },
-  },
+  -- {
+  --   "LazyVim/LazyVim",
+  --   opts = {
+  --     colorscheme = "rose-pine-moon",
+  --   },
+  -- },
 
   {
     "folke/snacks.nvim",
@@ -28,6 +28,7 @@ return {
         scope = { enabled = false, only_current = true, underline = false },
         chunk = { enabled = false, only_current = true },
       },
+      zen = { enabled = false },
     },
   },
   -- Customize bufferline - remove icons and close buttons
@@ -44,7 +45,7 @@ return {
     },
   },
 
-  { "nvim-lualine/lualine.nvim", enabled = false },
+  -- { "nvim-lualine/lualine.nvim", enabled = false },
 
   -- Customize lualine - remove clock, percent, cursor position, filename
   -- {
@@ -119,10 +120,15 @@ return {
     opts = { completion = { ghost_text = { enabled = false } } },
     cmdline = { ghost_text = { enabled = false } },
   },
+  -- {
+  --   "snacks.nvim",
+  --   ---@type snacks.Config
+  --   opts = {
+  --     words = { enabled = false },
+  --   },
+  -- },
+
   {
-    "snacks.nvim",
-    opts = {
-      words = { enabled = false },
-    },
+    "pocco81/true-zen.nvim",
   },
 }

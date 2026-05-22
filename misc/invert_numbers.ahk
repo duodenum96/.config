@@ -34,3 +34,10 @@
 
 -::SendText("_")
 +-::SendText("-")
+
+`;::SendText(":")
++`;::SendText(";")
+
+; Invert quotes
+'::SendText('"')
++'::SendText("'")

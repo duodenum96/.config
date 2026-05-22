@@ -21,6 +21,8 @@ return {
     -- REPL configuration per filetype
     local repl_commands = {
       python = "conda activate aj_int && python",
+      julia = "julia --project=. --threads=20",
+      -- julia = "julia --project=. --threads=20 --sysimage=./sys.so",
     }
 
     -- Store terminal jobid globally
